@@ -70,7 +70,7 @@ app.get('/article',
 )
 
 app.post('/article',
-    middleware.validator.query('title').isString(),
+    middleware.validator.body('title').isString(),
     middleware.inspector,
     async (req, res) => {
         const Article = ctx.database.model('Article', schema.article);
@@ -84,7 +84,12 @@ app.post('/article',
 )
 
 app.put('/article',
-    middleware.validator.query('title').isString(),
+    middleware.validator.body('people').isString(),
+    middleware.validator.body('price').isString(),
+    middleware.validator.body('contact').isObject(),
+    middleware.validator.body('condition').isArray(),
+    middleware.validator.body('area').isString(),
+    middleware.validator.body('isFound').isBoolean(),
     middleware.inspector,
     async (req, res) => {
         const Article = ctx.database.model('Article', schema.article);
@@ -125,7 +130,11 @@ app.delete('/article',
             res.sendStatus(StatusCodes.NOT_FOUND);
             return;
         }
-        if (await article.delete()) {
+        if (!article.isRemoved) {
+            article.isRemoved = true;
+            await article.save();
+            res.sendStatus(StatusCodes.NO_CONTENT);
+        } else if (await article.delete()) {
             res.sendStatus(StatusCodes.NO_CONTENT);
         } else {
             res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);

@@ -7,13 +7,13 @@ const ObjectId = Schema.ObjectId;
 
 module.exports = new Schema({
     id: ObjectId,
+    people: Number, //人數
     price: Number, // 房租
     photo: String, // 照片
-    isSold: Boolean, //是否租出
-    address: String, //地址
-    people: Number, //人數
     contact: Object, //聯絡方式
-    soldDate: Number, //出租日期
     condition: Array, //房屋條件
+    address: String, //地址
+    isSold: Boolean, //是否租出
+    soldTime: Number, //出租時間
     isRemoved: Boolean
 });
