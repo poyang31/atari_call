@@ -41,7 +41,9 @@ app.get('/articles',
     middleware.inspector,
     async (req, res) => {
         const Article = ctx.database.model('Article', schema.article);
-        const articles = await Article.find({}).exec();
+        const articles = await Article.find({
+            isRemoved: false
+        }).exec();
         res.send({articles});
     }
 )
@@ -51,8 +53,15 @@ app.get('/article',
     middleware.inspector,
     async (req, res) => {
         const Article = ctx.database.model('Article', schema.article);
-        const article = await Article.findOne({email: req.body.id}).exec();
-        if (!article) {
+        let article;
+        try {
+            article = await Article.findById(req.body.id).exec();
+        } catch (e) {
+            if (e.kind !== 'ObjectId') console.error(e);
+            res.sendStatus(StatusCodes.BAD_REQUEST);
+            return;
+        }
+        if (!article || article.isRemoved) {
             res.sendStatus(StatusCodes.NOT_FOUND);
             return;
         }
@@ -65,7 +74,7 @@ app.post('/article',
     middleware.inspector,
     async (req, res) => {
         const Article = ctx.database.model('Article', schema.article);
-        const article = new Article({});
+        const article = new Article(res.body);
         if (await article.save()) {
             res.sendStatus(StatusCodes.CREATED);
         } else {
@@ -79,8 +88,15 @@ app.put('/article',
     middleware.inspector,
     async (req, res) => {
         const Article = ctx.database.model('Article', schema.article);
-        const article = await Article.findOne({email: req.body.id}).exec();
-        if (!article) {
+        let article;
+        try {
+            article = await Article.findById(req.body.id).exec();
+        } catch (e) {
+            if (e.kind !== 'ObjectId') console.error(e);
+            res.sendStatus(StatusCodes.BAD_REQUEST);
+            return;
+        }
+        if (!article || article.isRemoved) {
             res.sendStatus(StatusCodes.NOT_FOUND);
             return;
         }

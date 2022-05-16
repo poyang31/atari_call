@@ -14,5 +14,6 @@ module.exports = new Schema({
     people: Number, //人數
     contact: Object, //聯絡方式
     soldDate: Number, //出租日期
-    condition: Array //房屋條件
+    condition: Array, //房屋條件
+    isRemoved: Boolean
 });
