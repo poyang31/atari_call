@@ -41,9 +41,11 @@ app.get('/articles',
     middleware.inspector,
     async (req, res) => {
         const Article = ctx.database.model('Article', schema.article);
+        const page_int = parseInt(req.query.page);
+        const page = page_int > 0 ? page_int - 1 : 0;
         const articles = await Article.find({
             isRemoved: false
-        }).exec();
+        }).skip(page * 10).limit(10).exec();
         res.send({articles});
     }
 )
@@ -55,7 +57,7 @@ app.get('/article',
         const Article = ctx.database.model('Article', schema.article);
         let article;
         try {
-            article = await Article.findById(req.body.id).exec();
+            article = await Article.findById(req.query.id).exec();
         } catch (e) {
             if (e.kind !== 'ObjectId') console.error(e);
             res.sendStatus(StatusCodes.BAD_REQUEST);
@@ -128,7 +130,7 @@ app.delete('/article',
         const Article = ctx.database.model('Article', schema.article);
         let article;
         try {
-            article = await Article.findById(req.body.id).exec();
+            article = await Article.findById(req.query.id).exec();
         } catch (e) {
             if (e.kind !== 'ObjectId') console.error(e);
             res.sendStatus(StatusCodes.BAD_REQUEST);
