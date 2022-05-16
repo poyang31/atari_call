@@ -115,6 +115,7 @@ app.put('/article',
             res.sendStatus(StatusCodes.NOT_FOUND);
             return;
         }
+        article = {...article, ...req.body};
         if (await article.save()) {
             res.sendStatus(StatusCodes.NO_CONTENT);
         } else {
