@@ -70,11 +70,18 @@ app.get('/article',
 )
 
 app.post('/article',
-    middleware.validator.body('title').isString(),
+    middleware.validator.body('id').isEmpty(),
+    middleware.validator.body('people').isNumeric(),
+    middleware.validator.body('price').isNumeric(),
+    middleware.validator.body('contact').isObject(),
+    middleware.validator.body('condition').isArray(),
+    middleware.validator.body('area').isString(),
+    middleware.validator.body('isFound').isEmpty(),
     middleware.inspector,
     async (req, res) => {
         const Article = ctx.database.model('Article', schema.article);
         const article = new Article(res.body);
+        article.isFound = false;
         if (await article.save()) {
             res.sendStatus(StatusCodes.CREATED);
         } else {
@@ -84,8 +91,9 @@ app.post('/article',
 )
 
 app.put('/article',
-    middleware.validator.body('people').isString(),
-    middleware.validator.body('price').isString(),
+    middleware.validator.body('id').isString(),
+    middleware.validator.body('people').isNumeric(),
+    middleware.validator.body('price').isNumeric(),
     middleware.validator.body('contact').isObject(),
     middleware.validator.body('condition').isArray(),
     middleware.validator.body('area').isString(),
