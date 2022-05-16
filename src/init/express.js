@@ -7,7 +7,7 @@ module.exports = (ctx) => {
     const auth = require("../middlewares/auth")(ctx);
 
     const app = express();
-    app.use(express.urlencoded({extended: true}));
+    app.use(express.json());
     app.use(request_ip.mw());
     app.use(auth);
 
