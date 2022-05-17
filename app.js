@@ -1,22 +1,30 @@
 "use strict";
 
+// 載入 .env 檔案
 require("dotenv").config();
 
+// HTTP 狀態碼常數表
 const { StatusCodes } = require("http-status-codes");
 
-const constant = require("./src/init/const"),
+const
+    // 常數
+    constant = require("./src/init/const"),
+    // 狀態
     ctx = {
         now: () => Math.floor(new Date().getTime() / 1000),
         cache: require("./src/init/cache"),
         database: require("./src/init/database"),
         jwt_secret: require("./src/init/jwt_secret"),
     },
+    // 工具
     util = {
         ip_address: require("./src/utils/ip_address"),
     },
+    // 結構
     schema = {
         article: require("./src/schemas/Article"),
     },
+    // 中間件
     middleware = {
         validator: require("express-validator"),
         file_upload: require("express-fileupload"),
@@ -24,12 +32,15 @@ const constant = require("./src/init/const"),
         inspector: require("./src/middlewares/inspector"),
     };
 
+// 初始化 express 實例
 const app = require("./src/init/express")(ctx);
 
+// 將 API 首頁轉址到前端頁面
 app.get("/", (_, res) => {
     res.redirect(StatusCodes.MOVED_PERMANENTLY, process.env.WEBSITE_URL);
 });
 
+// 取得使用者 IP 位置（測試網路狀態）
 app.get("/ip", (req, res) => {
     res.send({ ip_address: util.ip_address(req) });
 });
@@ -204,6 +215,7 @@ app.delete(
     }
 );
 
+// 建立圖片
 app.post(
     "/house/photo",
     middleware.file_upload({
@@ -218,6 +230,7 @@ app.post(
     }
 );
 
+// 啟動伺服器
 app.listen(process.env.HTTP_PORT, process.env.HTTP_HOSTNAME, () => {
     console.log(constant.APP_NAME);
     console.log("====");
