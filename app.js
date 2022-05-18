@@ -23,6 +23,7 @@ const
     // 結構
     schema = {
         article: require("./src/schemas/Article"),
+        house: require("./src/schemas/House")
     },
     // 中間件
     middleware = {
