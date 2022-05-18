@@ -13,5 +13,5 @@ module.exports = new Schema({
     condition: Array, //房屋條件
     area: String, //地區
     isFound: Boolean, //是否已找到
-    isRemoved: Boolean
+    isRemoved: Boolean //是否移除
 });

@@ -14,6 +14,6 @@ module.exports = new Schema({
     condition: Array, //房屋條件
     address: String, //地址
     isSold: Boolean, //是否租出
-    soldTime: Number, //出租時間
-    isRemoved: Boolean
+    soldTime: String, //承租時間
+    isRemoved: Boolean //是否移除
 });
