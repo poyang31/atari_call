@@ -10,7 +10,10 @@ module.exports = new Schema({
     people: Number, //人數
     price: Number, // 房租
     photo: String, // 照片
-    contact: Object, //聯絡方式
+    contact: {
+        LineID: String,
+        phoneNumber: String
+    }, //聯絡方式
     condition: Array, //房屋條件
     address: String, //地址
     isSold: Boolean, //是否租出

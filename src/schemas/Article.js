@@ -9,7 +9,10 @@ module.exports = new Schema({
     id: ObjectId,
     people: Number, //人數
     price: Number, //房租
-    contact: Object, //聯絡方式
+    contact: {
+        lineID : String,
+        phoneNumber : String
+    }, //聯絡方式
     condition: Array, //房屋條件
     area: String, //地區
     isFound: Boolean, //是否已找到
