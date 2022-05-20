@@ -35,10 +35,18 @@ const
 // 初始化 express 實例
 const app = require("./src/init/express")(ctx);
 
+// 初始化 Swagger 實例
+const
+    swagger = require("swagger-ui-express"),
+    swaggerDocument = require('./swagger.json');
+
 // 將 API 首頁轉址到前端頁面
 app.get("/", (_, res) => {
     res.redirect(StatusCodes.MOVED_PERMANENTLY, process.env.WEBSITE_URL);
 });
+
+// API 文檔頁面
+app.use('/docs', swagger.serve, swagger.setup(swaggerDocument));
 
 // 取得使用者 IP 位置（測試網路狀態）
 app.get("/ip", (req, res) => {
