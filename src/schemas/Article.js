@@ -10,10 +10,11 @@ module.exports = new Schema({
     people: Number, //人數
     price: Number, //房租
     contact: {
-        lineID : String,
-        phoneNumber : String
+        lineID: String,  //lineID
+        phoneNumber: String // 電話號碼
     }, //聯絡方式
-    condition: Array, //房屋條件
+    furniture: Array, //家具 ( 衣櫃 冷氣 熱水器 洗衣機 微波爐 )
+    publicUtilities: Array, //公共設施 ( 游泳池 交誼廳 客廳 飲水機 洗衣機 ) 
     area: String, //地區
     isFound: Boolean, //是否已找到
     isRemoved: Boolean //是否移除

@@ -254,6 +254,7 @@ app.get(
         // 取得未標示為被刪除的的文章列表
         const house = await House.find({
             isRemoved: false,
+            isRented: false
         })
             .skip(page * 10)
             .limit(10)
@@ -295,14 +296,16 @@ app.get(
 app.post(
     "/house",
     middleware.validator.body("id").isEmpty(),
+    middleware.validator.body("houseInfo").isObject(),
     middleware.validator.body("people").isNumeric(),
     middleware.validator.body("price").isNumeric(),
     middleware.validator.body("photo").isString(),
     middleware.validator.body("contact").isObject(),
-    middleware.validator.body("condition").isArray(),
+    middleware.validator.body("furniture").isArray(),
+    middleware.validator.body("publicUtilities").isArray(),
     middleware.validator.body("address").isString(),
-    middleware.validator.body("isSold").isBoolean(),
-    middleware.validator.body("soldTime").isString(),  // ToDo: 還未確定格式，所以未做格式檢查
+    middleware.validator.body("isRented").isString(),
+    middleware.validator.body("rentInfo").isObject(),  
     middleware.validator.body("isRemoved").isBoolean(),
     middleware.inspector,
     async (_, res) => {
@@ -327,14 +330,16 @@ app.post(
 app.put(
     "/house",
     middleware.validator.body("id").isEmpty(),
+    middleware.validator.body("houseInfo").isObject(),
     middleware.validator.body("people").isNumeric(),
     middleware.validator.body("price").isNumeric(),
     middleware.validator.body("photo").isString(),
     middleware.validator.body("contact").isObject(),
-    middleware.validator.body("condition").isArray(),
+    middleware.validator.body("furniture").isArray(),
+    middleware.validator.body("publicUtilities").isArray(),
     middleware.validator.body("address").isString(),
-    middleware.validator.body("isSold").isBoolean(),
-    middleware.validator.body("soldTime").isString(),  // ToDo: 還未確定格式，所以未做格式檢查
+    middleware.validator.body("isRented").isString(),
+    middleware.validator.body("rentInfo").isObject(),  
     middleware.validator.body("isRemoved").isBoolean(),
     middleware.inspector,
     async (req, res) => {

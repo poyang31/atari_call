@@ -7,16 +7,26 @@ const ObjectId = Schema.ObjectId;
 
 module.exports = new Schema({
     id: ObjectId,
+    houseInfo: {
+        houseSize: Number, //幾坪
+        houseType: String,  //屋子類型 ( 公寓大樓  透天厝之類的  )
+        roomType: String,   //房間類型  ( 套房 雅房之類的 )
+        room: Array //房間類型+房數 ( 如3房1廳1衛 )
+    },  //房屋資訊
     people: Number, //人數
-    price: Number, // 房租
+    price: Number, // 租金  
     photo: String, // 照片
     contact: {
-        LineID: String,
-        phoneNumber: String
+        lineID: String, //LineID
+        phoneNumber: String //電話號碼
     }, //聯絡方式
-    condition: Array, //房屋條件
+    furniture: Array, //家具 ( 衣櫃 冷氣 熱水器 洗衣機 微波爐 )
+    publicUtilities: Array, //公共設施 ( 游泳池 交誼廳 客廳 飲水機 洗衣機 ) 
     address: String, //地址
-    isSold: Boolean, //是否租出
-    soldTime: String, //承租時間
+    isRented: String, //是否租出
+    rentInfo: {
+        date: String, //入住日期
+        atLeastTime: String //最短租期
+    }, //承租時間
     isRemoved: Boolean //是否移除
 });
