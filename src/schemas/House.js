@@ -15,7 +15,7 @@ module.exports = new Schema({
     },  //房屋資訊
     people: Number, //人數
     price: Number, // 租金  
-    photo: String, // 照片
+    photo: Array, // 照片
     contact: {
         lineID: String, //LineID
         phoneNumber: String //電話號碼
