@@ -5,8 +5,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
-module.exports = new Schema( {
+module.exports = new Schema({
     id: ObjectId,
-    houseIds:Array
-} )
-
+    articleIds: Array,
+    houseIds: Array,
+    favoriteArticleIds: Array,
+    favoriteHouseIds: Array
+})
