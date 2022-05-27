@@ -12,46 +12,20 @@
     }
   ],
   "paths": {
-    "/users": {
+    "/article/{page}": {
       "get": {
-        "summary": "Return all users with list.",
-        "description": "Return all existed users.",
+        "summary": "取得所有文章(article)列表",
+        "description": "回傳所有文章(articles)的列表 json資料",
         "responses": {
           "200": {
-            "description": "A JSON array of user names",
+            "description": "文章陣列 json",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/User"
+                    "$ref": "#/components/schemas/Article"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Create a new user.",
-        "description": "Create a new user.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserInput"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Success create user.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -59,39 +33,62 @@
         }
       }
     },
-    "/users/{id}": {
+    "/article/{id}": {
       "get": {
-        "summary": "Return the specific user.",
-        "description": "Return the specific user.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "user id which wants to get",
-            "required": true
-          }
-        ],
+        "summary": "取得文章(article)資料",
+        "description": "回傳該 id 文章(articles)的 json資料",
         "responses": {
           "200": {
-            "description": "A JSON object of user",
+            "description": "文章 json",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Article"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles": {
+      "post": {
+        "summary": "創建一個新 article",
+        "description": "創建一個新 article",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Article"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "成功創建一個新 article",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array"
                 }
               }
             }
           }
         }
       },
-      "patch": {
-        "summary": "Update the specific user.",
-        "description": "Update the specific user.",
+      "put": {
+        "summary": "更新 article",
+        "description": "更新 article",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "user id which wants to update",
+            "description": "要更新的 article id ",
             "required": true
           }
         ],
@@ -100,18 +97,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserInput"
+                "$ref": "#/components/schemas/Article"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Success update user.",
+            "description": "成功更新 article",
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "string"
+                  "type": "array"
                 }
               }
             }
@@ -119,23 +116,151 @@
         }
       },
       "delete": {
-        "summary": "Delete the specific user.",
-        "description": "Delete the specific user.",
+        "summary": "刪除 article",
+        "description": "刪除 article",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "user id which wants to delete",
+            "description": "要刪除的 article id",
             "required": true
           }
         ],
         "responses": {
           "204": {
-            "description": "Success delete user.",
+            "description": "成功刪除 article",
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "string"
+                  "type": "array"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/house/{page}": {
+      "get": {
+        "summary": "取得所有房屋(house)列表",
+        "description": "回傳所有房屋(house)的列表 json資料",
+        "responses": {
+          "200": {
+            "description": "房屋陣列 json",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/House"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/house/{id}": {
+      "get": {
+        "summary": "取得房屋(house)資料",
+        "description": "回傳該 id 房屋(house)的 json資料",
+        "responses": {
+          "200": {
+            "description": "房屋 json",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/House"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/house": {
+      "post": {
+        "summary": "創建一個新 house",
+        "description": "創建一個新 house",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/House"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "成功創建一個新 house",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "更新 house",
+        "description": "更新 house",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "要更新的 house id ",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/House"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "成功更新 house",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "刪除 house",
+        "description": "刪除 house",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "要刪除的 house id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "成功刪除 house",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array"
                 }
               }
             }
@@ -146,36 +271,193 @@
   },
   "components": {
     "schemas": {
-      "User": {
+      "Article": {
         "properties": {
           "id": {
+            "type": "string",
+            "example": "62911a69b2736b38131794ca"
+          },
+          "people": {
             "type": "integer",
             "format": "int64",
-            "example": 1
+            "example": 4
           },
-          "username": {
-            "type": "string",
-            "example": "Jimmy"
+          "price": {
+            "type": "integer",
+            "format": "int64",
+            "example": 16000
           },
-          "email": {
-            "type": "string",
-            "example": "test@test.com"
+          "contact": {
+            "type": "object",
+            "example": {
+              "lineID": "abc123aa",
+              "phoneNumber": "0909632840"
+            }
+          },
+          "furniture": {
+            "type": "array",
+            "example": ["衣櫃", "冷氣", "熱水器", "洗衣機", "微波爐"]
+          },
+          "publicUtilities": {
+            "type": "array",
+            "example": ["游泳池", "交誼廳", "客廳", "飲水機", "洗衣機"]
+          },
+          "area": {
+            "type": "object",
+            "example": {
+              "city": "高雄市",
+              "township": "楠梓區"
+            }
+          },
+          "isFound": {
+            "type": "boolean",
+            "example": true
+          },
+          "isRemoved": {
+            "type": "boolean",
+            "example": false
           }
         },
-        "required": ["id", "username", "email"]
+        "required": [
+          "id",
+          "people",
+          "price",
+          "contact",
+          "furniture",
+          "publicUtilities",
+          "area",
+          "isFound",
+          "isRemoved"
+        ]
       },
-      "UserInput": {
+      "House": {
         "properties": {
-          "username": {
+          "id": {
+            "type": "string",
+            "example": "62911a7a3bc63099667519af"
+          },
+          "houseInfo": {
+            "type": "object",
+            "example": {
+              "houseSize": 8.3,
+              "houseType": "公寓大樓",
+              "roomType": "套房",
+              "room": [{ "房": 4 }, { "衛": 1 }, { "廳": 1 }]
+            }
+          },
+          "people": {
+            "type": "integer",
+            "format": "int64",
+            "example": 4
+          },
+          "price": {
+            "type": "integer",
+            "example": 17000
+          },
+          "photo": {
+            "type": "array",
+            "example": ["url1", "url2"]
+          },
+          "contact": {
+            "type": "object",
+            "example": {
+              "lineID": "abc123aa",
+              "phoneNumber": "0909632840"
+            }
+          },
+          "furniture": {
+            "type": "array",
+            "example": ["冷氣", "熱水器"]
+          },
+          "publicUtilities": {
+            "type": "array",
+            "example": ["游泳池", "飲水機"]
+          },
+          "address": {
+            "type": "object",
+            "example": {
+              "city": "高雄市",
+              "township": "楠梓區",
+              "others": "建楠路160號"
+            }
+          },
+          "isRented": {
+            "type": "String",
+            "example": "已出租"
+          },
+          "rentInfo": {
+            "type": "object",
+            "example": {
+              "date": "7/1",
+              "atLeastTime": "1年"
+            }
+          },
+          "isRemoved": {
+            "type": "Boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "id",
+          "houseInfo",
+          "people",
+          "price",
+          "photo",
+          "contact",
+          "furniture",
+          "publicUtilities",
+          "address",
+          "isRented",
+          "rentInfo",
+          "isRemoved"
+        ]
+      },
+      "UserPrefernences": {
+        "properties": {
+          "id": {
             "type": "string",
             "example": "Jimmy"
           },
-          "email": {
-            "type": "string",
-            "example": "test@test.com"
+          "articleIds": {
+            "type": "array",
+            "example": [
+              "629118ffedcedc7187c3c8be ",
+              "62911914f860c3a546d68677",
+              "6291191e4634438bd6e9479f"
+            ]
+          },
+          "houseIds": {
+            "type": "array",
+            "example": [
+              "629119564a12007f0de4f9de",
+              "6291195d3c70946ad49a6818",
+              "62911968b179838ad1794602"
+            ]
+          },
+          "favoriteArticleIds": {
+            "type": "array",
+            "example": [
+              "629119aa3a4cde5f1d1912fc",
+              "629119b71f6ef45f4b58532a",
+              "629119cf513a04f210af2a5d"
+            ]
+          },
+          "favoriteHouseIds": {
+            "type": "array",
+            "example": [
+              "629119de7a11a1a488017959",
+              "629119e7a6d7453a3d2cad89",
+              "629119ef2f2fc565166755f3"
+            ]
           }
         },
-        "required": ["username", "email"]
+        "required": [
+          "id",
+           "articleIds",
+           "houseIds",
+           "favoriteArticleIds",
+           "favoriteHouseIds"
+          ]
       }
     }
   }

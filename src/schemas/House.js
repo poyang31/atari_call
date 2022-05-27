@@ -22,7 +22,11 @@ module.exports = new Schema({
     }, //聯絡方式
     furniture: Array, //家具 ( 衣櫃 冷氣 熱水器 洗衣機 微波爐 )
     publicUtilities: Array, //公共設施 ( 游泳池 交誼廳 客廳 飲水機 洗衣機 ) 
-    address: String, //地址
+    address: {
+        city:String,  //縣市
+        township:String, //鄉鎮
+        others:String  //其他詳細地址
+    }, //地址
     isRented: String, //是否租出
     rentInfo: {
         date: String, //入住日期
