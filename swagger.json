@@ -45,7 +45,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Article"
+                    "$ref": "#/components/schemas/ArticleGet"
                   }
                 }
               }
@@ -63,7 +63,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Article"
+                "$ref": "#/components/schemas/ArticleCreat"
               }
             }
           }
@@ -173,7 +173,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/House"
+                    "$ref": "#/components/schemas/HouseGet"
                   }
                 }
               }
@@ -191,7 +191,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/House"
+                "$ref": "#/components/schemas/HouseCreat"
               }
             }
           }
@@ -296,11 +296,11 @@
           },
           "furniture": {
             "type": "array",
-            "example": ["衣櫃", "冷氣", "熱水器", "洗衣機", "微波爐"]
+            "example": ["衣櫃", "冷氣", "熱水器", "私人洗衣機", "微波爐"]
           },
           "publicUtilities": {
             "type": "array",
-            "example": ["游泳池", "交誼廳", "客廳", "飲水機", "洗衣機"]
+            "example": ["游泳池", "交誼廳", "客廳", "飲水機", "公共洗衣機"]
           },
           "area": {
             "type": "object",
@@ -320,6 +320,69 @@
         },
         "required": [
           "id",
+          "people",
+          "price",
+          "contact",
+          "furniture",
+          "publicUtilities",
+          "area",
+          "isFound",
+          "isRemoved"
+        ]
+      },
+      "ArticleGet": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "62911a69b2736b38131794ca"
+          }
+        },
+        "required": ["id"]
+      },
+      "ArticleCreat": {
+        "properties": {
+          "people": {
+            "type": "integer",
+            "format": "int64",
+            "example": 4
+          },
+          "price": {
+            "type": "integer",
+            "format": "int64",
+            "example": 16000
+          },
+          "contact": {
+            "type": "object",
+            "example": {
+              "lineID": "abc123aa",
+              "phoneNumber": "0909632840"
+            }
+          },
+          "furniture": {
+            "type": "array",
+            "example": ["衣櫃", "冷氣", "熱水器", "私人洗衣機", "微波爐"]
+          },
+          "publicUtilities": {
+            "type": "array",
+            "example": ["游泳池", "交誼廳", "客廳", "飲水機", "公共洗衣機"]
+          },
+          "area": {
+            "type": "object",
+            "example": {
+              "city": "高雄市",
+              "township": "楠梓區"
+            }
+          },
+          "isFound": {
+            "type": "boolean",
+            "example": true
+          },
+          "isRemoved": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
           "people",
           "price",
           "contact",
@@ -412,6 +475,91 @@
           "isRemoved"
         ]
       },
+      "HouseGet": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "62911a7a3bc63099667519af"
+          }
+        }
+      },
+      "HouseCreat": {
+        "properties": {
+          "houseInfo": {
+            "type": "object",
+            "example": {
+              "houseSize": 8.3,
+              "houseType": "公寓大樓",
+              "roomType": "套房",
+              "room": [{ "房": 4 }, { "衛": 1 }, { "廳": 1 }]
+            }
+          },
+          "people": {
+            "type": "integer",
+            "format": "int64",
+            "example": 4
+          },
+          "price": {
+            "type": "integer",
+            "example": 17000
+          },
+          "photo": {
+            "type": "array",
+            "example": ["url1", "url2"]
+          },
+          "contact": {
+            "type": "object",
+            "example": {
+              "lineID": "abc123aa",
+              "phoneNumber": "0909632840"
+            }
+          },
+          "furniture": {
+            "type": "array",
+            "example": ["冷氣", "熱水器"]
+          },
+          "publicUtilities": {
+            "type": "array",
+            "example": ["游泳池", "飲水機"]
+          },
+          "address": {
+            "type": "object",
+            "example": {
+              "city": "高雄市",
+              "township": "楠梓區",
+              "others": "建楠路160號"
+            }
+          },
+          "isRented": {
+            "type": "String",
+            "example": "已出租"
+          },
+          "rentInfo": {
+            "type": "object",
+            "example": {
+              "date": "7/1",
+              "atLeastTime": "1年"
+            }
+          },
+          "isRemoved": {
+            "type": "Boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "houseInfo",
+          "people",
+          "price",
+          "photo",
+          "contact",
+          "furniture",
+          "publicUtilities",
+          "address",
+          "isRented",
+          "rentInfo",
+          "isRemoved"
+        ]
+      },
       "UserPrefernences": {
         "properties": {
           "id": {
@@ -453,11 +601,11 @@
         },
         "required": [
           "id",
-           "articleIds",
-           "houseIds",
-           "favoriteArticleIds",
-           "favoriteHouseIds"
-          ]
+          "articleIds",
+          "houseIds",
+          "favoriteArticleIds",
+          "favoriteHouseIds"
+        ]
       }
     }
   }
