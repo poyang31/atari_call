@@ -12,10 +12,20 @@
     }
   ],
   "paths": {
-    "/article/{page}": {
+    "/articles": {
       "get": {
         "summary": "取得所有文章(article)列表",
         "description": "回傳所有文章(articles)的列表 json資料",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "文章頁數"
+          }
+        ],
         "responses": {
           "200": {
             "description": "文章陣列 json",
@@ -33,10 +43,20 @@
         }
       }
     },
-    "/article/{id}": {
+    "/article": {
       "get": {
         "summary": "取得文章(article)資料",
         "description": "回傳該 id 文章(articles)的 json資料",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "id"
+          }
+        ],
         "responses": {
           "200": {
             "description": "文章 json",
@@ -52,9 +72,7 @@
             }
           }
         }
-      }
-    },
-    "/articles": {
+      },
       "post": {
         "summary": "創建一個新 article",
         "description": "創建一個新 article",
@@ -87,7 +105,10 @@
         "parameters": [
           {
             "name": "id",
-            "in": "path",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
             "description": "要更新的 article id ",
             "required": true
           }
@@ -121,7 +142,10 @@
         "parameters": [
           {
             "name": "id",
-            "in": "path",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
             "description": "要刪除的 article id",
             "required": true
           }
@@ -140,10 +164,20 @@
         }
       }
     },
-    "/house/{page}": {
+    "/houses": {
       "get": {
         "summary": "取得所有房屋(house)列表",
         "description": "回傳所有房屋(house)的列表 json資料",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "id"
+          }
+        ],
         "responses": {
           "200": {
             "description": "房屋陣列 json",
@@ -161,10 +195,20 @@
         }
       }
     },
-    "/house/{id}": {
+    "/house": {
       "get": {
         "summary": "取得房屋(house)資料",
         "description": "回傳該 id 房屋(house)的 json資料",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "id"
+          }
+        ],
         "responses": {
           "200": {
             "description": "房屋 json",
@@ -180,9 +224,7 @@
             }
           }
         }
-      }
-    },
-    "/house": {
+      },
       "post": {
         "summary": "創建一個新 house",
         "description": "創建一個新 house",
@@ -215,7 +257,10 @@
         "parameters": [
           {
             "name": "id",
-            "in": "path",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
             "description": "要更新的 house id ",
             "required": true
           }
@@ -249,7 +294,10 @@
         "parameters": [
           {
             "name": "id",
-            "in": "path",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
             "description": "要刪除的 house id",
             "required": true
           }
@@ -445,7 +493,7 @@
             }
           },
           "isRented": {
-            "type": "String",
+            "type": "string",
             "example": "已出租"
           },
           "rentInfo": {
@@ -456,7 +504,7 @@
             }
           },
           "isRemoved": {
-            "type": "Boolean",
+            "type": "boolean",
             "example": false
           }
         },
@@ -531,7 +579,7 @@
             }
           },
           "isRented": {
-            "type": "String",
+            "type": "string",
             "example": "已出租"
           },
           "rentInfo": {
@@ -542,7 +590,7 @@
             }
           },
           "isRemoved": {
-            "type": "Boolean",
+            "type": "boolean",
             "example": false
           }
         },

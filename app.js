@@ -241,7 +241,7 @@ app.post(
 
 // 取得房屋列表
 app.get(
-    "/house",
+    "/houses",
     middleware.validator.query("page").isNumeric(),
     middleware.inspector,
     async (req, res) => {
