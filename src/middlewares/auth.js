@@ -1,3 +1,5 @@
+"use strict";
+
 const {validateAuthToken} = require("../utils/token");
 const {getUserPreferences} = require("../utils/user_preferences");
 

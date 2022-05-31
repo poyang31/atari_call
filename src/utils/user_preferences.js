@@ -1,3 +1,5 @@
+"use strict";
+
 const schema = {
     user_preferences: require("../schemas/UserPreferences")
 };
