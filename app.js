@@ -418,7 +418,7 @@ app.delete(
 
 
 // 啟動伺服器
-app.listen(process.env.HTTP_PORT, process.env.HTTP_HOSTNAME, () => {
+require('./src/execute')(app, () => {
     console.log(constant.APP_NAME);
     console.log("====");
     console.log("Application is listening at");
