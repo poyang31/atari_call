@@ -16,6 +16,7 @@ module.exports = new Schema({
     people: Number, //人數
     price: Number, // 租金  
     photo: Array, // 照片
+    title: String, //房屋名稱
     contact: {
         lineID: String, //LineID
         phoneNumber: String //電話號碼
@@ -23,9 +24,9 @@ module.exports = new Schema({
     furniture: Array, //家具 ( 衣櫃 冷氣 熱水器 私人洗衣機 微波爐 )
     publicUtilities: Array, //公共設施 ( 游泳池 交誼廳 客廳 飲水機 公共洗衣機 ) 
     address: {
-        city:String,  //縣市
-        township:String, //鄉鎮
-        others:String  //其他詳細地址
+        city: String,  //縣市
+        township: String, //鄉鎮
+        others: String  //其他詳細地址
     }, //地址
     isRented: String, //是否租出
     rentInfo: {
