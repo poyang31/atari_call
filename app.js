@@ -18,6 +18,7 @@ const
     },
     // 工具
     util = {
+        hash: require('js-sha256'),
         ip_address: require("./src/utils/ip_address"),
     },
     // 結構
@@ -109,14 +110,17 @@ app.get(
 // 建立文章
 app.post(
     "/article",
-    middleware.validator.body("id").isEmpty(),
+    middleware.access(null),
+    middleware.validator.body("id").isString(),
+    middleware.validator.body("authorId").isString(),
     middleware.validator.body("people").isNumeric(),
     middleware.validator.body("price").isNumeric(),
     middleware.validator.body("title").isString(),
     middleware.validator.body("contact").isObject(),
-    middleware.validator.body("condition").isArray(),
+    middleware.validator.body("articleDescription").isString(),
+    middleware.validator.body("equipmentAndServices").isObject(),
     middleware.validator.body("area").isObject(),
-    middleware.validator.body("isFound").isEmpty(),
+    middleware.validator.body("isFound").isBoolean(),
     middleware.validator.body("isRemoved").isEmpty(),
     middleware.inspector,
     async (_, res) => {
@@ -142,12 +146,15 @@ app.post(
 // 修改文章
 app.put(
     "/article",
+    middleware.access(null),
     middleware.validator.body("id").isString(),
+    middleware.validator.body("authorId").isString(),
     middleware.validator.body("people").isNumeric(),
     middleware.validator.body("price").isNumeric(),
     middleware.validator.body("title").isString(),
     middleware.validator.body("contact").isObject(),
-    middleware.validator.body("condition").isArray(),
+    middleware.validator.body("articleDescription").isString(),
+    middleware.validator.body("equipmentAndServices").isObject(),
     middleware.validator.body("area").isObject(),
     middleware.validator.body("isFound").isBoolean(),
     middleware.validator.body("isRemoved").isEmpty(),
@@ -188,6 +195,7 @@ app.put(
 // 刪除文章
 app.delete(
     "/article",
+    middleware.access(null),
     middleware.validator.query("id").isString(),
     middleware.inspector,
     async (req, res) => {
@@ -229,6 +237,7 @@ app.delete(
 // 建立圖片
 app.post(
     "/house/photo",
+    middleware.access(null),
     middleware.file_upload({
         limits: { fileSize: 50 * 1024 * 1024 },
     }),
@@ -297,15 +306,17 @@ app.get(
 // 建立房屋
 app.post(
     "/house",
+    middleware.access(null),
     middleware.validator.body("id").isEmpty(),
+    middleware.validator.body("authorId").isEmpty(),
     middleware.validator.body("houseInfo").isObject(),
     middleware.validator.body("people").isNumeric(),
     middleware.validator.body("price").isNumeric(),
     middleware.validator.body("title").isString(),
     middleware.validator.body("photo").isArray(),
     middleware.validator.body("contact").isObject(),
-    middleware.validator.body("furniture").isArray(),
-    middleware.validator.body("publicUtilities").isArray(),
+    middleware.validator.body("houseDescription").isString(),
+    middleware.validator.body("equipmentAndServices").isObject(),
     middleware.validator.body("address").isString(),
     middleware.validator.body("isRented").isString(),
     middleware.validator.body("rentInfo").isObject(),
@@ -332,15 +343,17 @@ app.post(
 // 修改房屋
 app.put(
     "/house",
+    middleware.access(null),
     middleware.validator.body("id").isEmpty(),
+    middleware.validator.body("authorId").isEmpty(),
     middleware.validator.body("houseInfo").isObject(),
     middleware.validator.body("people").isNumeric(),
     middleware.validator.body("price").isNumeric(),
     middleware.validator.body("title").isString(),
     middleware.validator.body("photo").isArray(),
     middleware.validator.body("contact").isObject(),
-    middleware.validator.body("furniture").isArray(),
-    middleware.validator.body("publicUtilities").isArray(),
+    middleware.validator.body("houseDescription").isString(),
+    middleware.validator.body("equipmentAndServices").isObject(),
     middleware.validator.body("address").isString(),
     middleware.validator.body("isRented").isString(),
     middleware.validator.body("rentInfo").isObject(),
@@ -382,6 +395,7 @@ app.put(
 // 刪除房屋
 app.delete(
     "/house",
+    middleware.access(null),
     middleware.validator.query("id").isString(),
     middleware.inspector,
     async (req, res) => {
@@ -417,6 +431,69 @@ app.delete(
             // 刪除失敗，一律回傳 INTERNAL_SERVER_ERROR
             res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
         }
+    }
+);
+
+// 建立使用者
+app.post(
+    "/register",
+    middleware.validator.body("id").isEmpty(),
+    middleware.validator.body("username").isString(),
+    middleware.validator.body("password").isString(),
+    middleware.validator.body("favoriteArticleIds").isEmpty(),
+    middleware.validator.body("favoriteHouseIds").isEmpty(),
+
+    middleware.inspector,
+    async (req, res) => {
+        // 取得文章的 Model
+        const User = ctx.database.model("User", schema.User);
+        req.body.password = util.hash.sha256(req.body.password);
+        // 建立新的文章
+        const user = new User(req.body);
+        // 強制設定 favoriteArticleIds 為 null
+        user.favoriteArticleIds = null;
+        // 強制設定 favoriteHouseIds 為 null
+        user.favoriteHouseIds = null;
+        // 儲存文章
+        if (await user.save()) {
+            // 如果儲存成功，將回傳 CREATED
+            res.sendStatus(StatusCodes.CREATED);
+        } else {
+            // 如果儲存失敗，將回傳 INTERNAL_SERVER_ERROR
+            res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+        }
+    }
+);
+
+// 查詢使用者
+app.get(
+    "/login",
+    middleware.validator.query("username").isString(),
+    middleware.validator.query("password").isString(),
+    middleware.inspector,
+    async (req, res) => {
+        // 取得使用者的 Model
+        const User = ctx.database.model("User", schema.user);
+        // 透過 username 取得該帳號
+        const user = User.findOne({ username: req.body.username });
+
+        // 檢查該篇帳號是否存在
+        if (!user || user.isRemoved) {
+            // 如果沒有找到該篇帳號，或已標示為被刪除的，將回傳 NOT_FOUND，並且結束函式
+            res.sendStatus(StatusCodes.NOT_FOUND);
+            return;
+        }
+        const password = util.hash.sha256(req.body.password);
+
+        // 檢查該篇密碼是否正確
+        if (!(password === user.password)) {
+            res.sendStatus(StatusCodes.UNAUTHORIZED);
+            //如果密碼錯誤，將回傳 UNAUTHORIZED，並且結束函式
+            return;
+        }
+
+        // 回傳該帳戶
+        res.send(user);
     }
 );
 

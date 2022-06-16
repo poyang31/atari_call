@@ -7,8 +7,8 @@ const ObjectId = Schema.ObjectId;
 
 module.exports = new Schema({
     id: ObjectId,
-    articleIds: Array,
-    houseIds: Array,
+    username: String,
+    password: String,
     favoriteArticleIds: Array,
     favoriteHouseIds: Array
 })

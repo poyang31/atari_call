@@ -1,5 +1,5 @@
 const schema = {
-    user_preferences: require("../schemas/UserPreferences")
+    user_preferences: require("../schemas/User")
 };
 
 async function getUserPreferences(ctx, user_id) {
