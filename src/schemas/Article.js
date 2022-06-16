@@ -8,9 +8,14 @@ const ObjectId = Schema.ObjectId;
 module.exports = new Schema({
     id: ObjectId,
     authorId: String, //發布者id
-    people: Number, //人數
     price: Number, //房租
     title: String, //文章名稱
+    houseInfo: {
+        houseSize: Number, //幾坪
+        houseType: String,  //屋子類型 ( 公寓大樓  透天厝之類的  )
+        roomType: String,   //房間類型  ( 整層住家 獨立套房 雅房之類的 )
+        room: Object //房間類型+房數 ( 如3房1廳1衛 )
+    },  //房屋資訊
     contact: {
         lineID: String,  //lineID
         phoneNumber: String // 電話號碼

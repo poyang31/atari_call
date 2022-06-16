@@ -12,10 +12,12 @@ module.exports = new Schema({
         houseSize: Number, //幾坪
         houseType: String,  //屋子類型 ( 公寓大樓  透天厝之類的  )
         roomType: String,   //房間類型  ( 整層住家 獨立套房 雅房之類的 )
-        room: Array //房間類型+房數 ( 如3房1廳1衛 )
+        room: Object //房間類型+房數 ( 如3房1廳1衛 )
     },  //房屋資訊
-    people: Number, //人數
     price: Number, // 租金  
+    depositMethod: String, // 押金方式
+    rentIncludes: Array, // 租金包含 
+    houseFace: String, //房屋面向
     photo: Array, // 照片
     title: String, //房屋名稱
     contact: {

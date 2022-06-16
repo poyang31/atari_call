@@ -69,10 +69,10 @@ app.get(
         const page = page_int > 0 ? page_int - 1 : 0;
         // 取得未標示為被刪除的的文章列表
         const articles = await Article.find({
-            isRemoved: false,
+            isRemoved: false
         })
-            .skip(page * 10)
-            .limit(10)
+            .skip(page * 12)
+            .limit(12)
             .exec();
         // 回傳文章列表
         res.send(articles);
@@ -112,9 +112,11 @@ app.post(
     "/article",
     middleware.access(null),
     middleware.validator.body("id").isString(),
-    middleware.validator.body("authorId").isString(),
-    middleware.validator.body("people").isNumeric(),
+    middleware.validator.body("houseInfo").isObject(),
     middleware.validator.body("price").isNumeric(),
+    middleware.validator.body("depositMethod").isString(),
+    middleware.validator.body("rentIncludes").isArray(),
+    middleware.validator.body("houseFace").isString(),
     middleware.validator.body("title").isString(),
     middleware.validator.body("contact").isObject(),
     middleware.validator.body("articleDescription").isString(),
@@ -128,6 +130,8 @@ app.post(
         const Article = ctx.database.model("Article", schema.article);
         // 建立新的文章
         const article = new Article(res.body);
+        // 強制設定 authorId 為 作者 id
+        article.authorId = req.authenticated.sub;
         // 強制設定 isFound 為 false
         article.isFound = false;
         // 強制設定 isRemoved 為 false
@@ -148,8 +152,8 @@ app.put(
     "/article",
     middleware.access(null),
     middleware.validator.body("id").isString(),
-    middleware.validator.body("authorId").isString(),
-    middleware.validator.body("people").isNumeric(),
+    middleware.validator.body("houseInfo").isObject(),
+    middleware.validator.body("authorId").isEmpty(),
     middleware.validator.body("price").isNumeric(),
     middleware.validator.body("title").isString(),
     middleware.validator.body("contact").isObject(),
@@ -169,6 +173,11 @@ app.put(
         } catch (e) {
             if (e.kind !== "ObjectId") console.error(e);
             res.sendStatus(StatusCodes.BAD_REQUEST);
+            return;
+        }
+        // 如果文章作者與請求者id不同，則顯示錯誤
+        if (!article.authorId === req.authenticated.sub) {
+            res.sendStatus(StatusCodes.BAD_REQUEST)
             return;
         }
         // 檢查該篇文章是否存在
@@ -218,6 +227,12 @@ app.delete(
             res.sendStatus(StatusCodes.NOT_FOUND);
             return;
         }
+        // 如果文章作者與請求者id不同，則顯示錯誤
+        if (!article.authorId === req.authenticated.sub) {
+            res.sendStatus(StatusCodes.BAD_REQUEST)
+            return;
+        }
+
         // 檢查文章是否已被刪除
         if (!article.isRemoved) {
             // 若該篇文章已經未被標示為刪除，則將其設定為刪除，並且回傳 NO_CONTENT
@@ -262,11 +277,53 @@ app.get(
         const page_int = parseInt(req.query.page);
         // 運算 page 的起始索引
         const page = page_int > 0 ? page_int - 1 : 0;
-        // 取得未標示為被刪除的的文章列表
-        const house = await House.find({
+
+        const filter = {
             isRemoved: false,
-            isRented: false
-        })
+            isRented: false,
+            address: {
+                city: req.query.address.city,
+                township: { $in: req.query.address.township }
+            },
+            "houseInfo.houseType": req.query.houseInfo.houseType,
+            "houseInfo.roomType": req.query.houseInfo.roomType,
+            price: {
+                $lte: req.query.price[1],
+                $gte: req.query.price[0]
+            },
+            "houseInfo.room.房間": { $gte: req.query.houseInfo.room.房間 },
+            "houseInfo.room.衛浴": { $gte: req.query.houseInfo.room.衛浴 },
+            "houseInfo.room.廳數": { $gte: req.query.houseInfo.room.廳數 },
+            equipmentAndServices: {
+                condition: { $all: req.query.equipmentAndServices.condition },
+                houseRule: { $all: req.query.equipmentAndServices.house },
+                equipment: { $all: req.query.equipmentAndServices.equipment }
+            }
+        }
+        if (req.query.address.township) {
+            filter["address.township"] = {}
+        }
+        if (req.query.houseInfo.houseType) {
+            filter["houseInfo.houseType"] = {}
+        }
+        if (req.query.houseInfo.houseType) {
+            filter["houseInfo.roomType"] = {}
+        }
+        if (req.query.equipmentAndServices.condition) {
+            filter["houseInfo.houseType"] = {}
+        }
+        if (req.query.equipmentAndServices.houseRule) {
+            filter["houseInfo.houseType"] = {}
+        }
+        if (req.query.equipmentAndServices.equipment) {
+            filter["houseInfo.houseType"] = {}
+        }
+
+
+
+
+        // 取得未標示為被刪除的的文章列表
+        const house = await House.find(filter)
             .skip(page * 10)
             .limit(10)
             .exec();
@@ -308,7 +365,6 @@ app.post(
     "/house",
     middleware.access(null),
     middleware.validator.body("id").isEmpty(),
-    middleware.validator.body("authorId").isEmpty(),
     middleware.validator.body("houseInfo").isObject(),
     middleware.validator.body("people").isNumeric(),
     middleware.validator.body("price").isNumeric(),
@@ -329,6 +385,8 @@ app.post(
         const house = new House(res.body);
         // 強制設定 isRemoved 為 false
         house.isRemoved = false;
+        // 強制設定 authorId 為 作者 id
+        house.authorId = req.authenticated.sub;
         // 儲存文章
         if (await house.save()) {
             // 如果儲存成功，將回傳 CREATED
@@ -371,6 +429,11 @@ app.put(
             res.sendStatus(StatusCodes.BAD_REQUEST);
             return;
         }
+        // 如果房屋作者與請求者id不同，則顯示錯誤
+        if (!house.authorId === req.authenticated.sub) {
+            res.sendStatus(StatusCodes.BAD_REQUEST)
+            return;
+        }
         // 檢查該房屋是否存在
         if (!house || house.isRemoved) {
             // 如果沒有找到該房屋，或已標示為被刪除的，將回傳 NOT_FOUND，並且結束函式
@@ -410,6 +473,11 @@ app.delete(
             if (e.kind !== "ObjectId") console.error(e);
             // 查詢發生錯誤，一律回傳 BAD_REQUEST
             res.sendStatus(StatusCodes.BAD_REQUEST);
+            return;
+        }
+        // 如果房屋作者與請求者id不同，則顯示錯誤
+        if (!house.authorId === req.authenticated.sub) {
+            res.sendStatus(StatusCodes.BAD_REQUEST)
             return;
         }
         // 檢查該房屋是否存在
