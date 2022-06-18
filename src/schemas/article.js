@@ -3,10 +3,8 @@
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
-const ObjectId = Schema.ObjectId;
 
 module.exports = new Schema({
-    id: ObjectId,
     people: Number, // 人數
     price: Number, // 房租
     title: String, // 文章名稱

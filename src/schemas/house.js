@@ -3,10 +3,8 @@
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
-const ObjectId = Schema.ObjectId;
 
 module.exports = new Schema({
-    id: ObjectId,
     houseInfo: {
         houseSize: Number, // 幾坪
         houseType: String, // 屋子類型 ( 公寓大樓  透天厝之類的  )
