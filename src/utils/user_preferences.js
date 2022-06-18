@@ -1,13 +1,24 @@
+"use strict";
+
 const schema = {
-    user_preferences: require("../schemas/User")
+    userPreferences: require("../schemas/UserPreferences"),
 };
 
-async function getUserPreferences(ctx, user_id) {
-    const UserPreferences = ctx.database.model("UserPreferences", schema.user_preferences);
-    const user_preferences = await UserPreferences.find(user_id).exec();
-    return user_preferences || null;
+/**
+ * getUserPreferences
+ * @param {object} ctx
+ * @param {string} userId
+ * @return {Promise<Array<HydratedDocument<any, {}, {}>>|null>}
+ */
+async function getUserPreferences(ctx, userId) {
+    const UserPreferences = ctx.database.model(
+        "UserPreferences",
+        schema.userPreferences,
+    );
+    const userPreferences = await UserPreferences.find(userId).exec();
+    return userPreferences || null;
 }
 
 module.exports = {
-    getUserPreferences
+    getUserPreferences,
 };

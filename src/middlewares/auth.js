@@ -1,30 +1,45 @@
-const {validateAuthToken} = require("../utils/token");
-const {getUserPreferences} = require("../utils/user_preferences");
+"use strict";
+// Validate "Authorization" header, but it will not interrupt the request.
 
-module.exports = (ctx) => {
-    return function (req, res, next) {
-        const auth_code = req.header("Authorization");
-        if (!auth_code) {
-            next();
-            return;
-        }
-        const params = auth_code.split(" ");
-        if (params.length !== 2) {
-            next();
-            return;
-        }
-        req.auth_method = params[0];
-        switch (params[0]) {
-            case "SARA": {
-                req.authenticated = validateAuthToken(ctx, params[1]);
-                if (req.authenticated) {
-                     getUserPreferences(ctx, req.authenticated.sub)
-                         .then((preferences) => req.authenticated.preferences = preferences)
-                         .catch((e) => console.error(e));
-                }
-                break;
-            }
-        }
+// To interrupt the request which without the request,
+// please use "access.js" middleware.
+
+// Import StatusCodes
+const {StatusCodes} = require("http-status-codes");
+
+// Import authMethods
+const authMethods = {
+    "SARA": async (ctx, req, _) =>
+        require("../utils/token").validateAuthToken(ctx, req.auth_secret),
+};
+
+// Export (function)
+module.exports = (ctx) => function(req, res, next) {
+    const authCode = req.header("Authorization");
+    if (!authCode) {
         next();
-    };
-}
+        return;
+    }
+    const params = authCode.split(" ");
+    if (params.length !== 2) {
+        next();
+        return;
+    }
+    req.auth_method = params[0];
+    req.auth_secret = params[1];
+    if (!(req.auth_method in authMethods)) {
+        next();
+        return;
+    }
+    authMethods[req.auth_method](ctx, req, res)
+        .then((result) => {
+            if (!req.authenticated) {
+                req.authenticated = result;
+            }
+            next();
+        })
+        .catch((error) => {
+            res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+            console.error(error);
+        });
+};
