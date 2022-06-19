@@ -9,19 +9,20 @@ const {StatusCodes} = require("http-status-codes");
 // Initialize tests
 const {app, readToken} = require("./init");
 
-const testData1 = {
+const createData1 = {
     houseInfo: {
         houseSize: 10,
         houseType: "公寓大樓",
         roomType: "整層住家",
-        room: [{id: 2, RoomName: "房間", RoomNumber: 2},
-            {id: 3, RoomName: "衛浴", RoomNumber: 2},
-            {id: 4, RoomName: "大廳", RoomNumber: 1},
-        ]
+        room: {
+            房間:2,
+            衛浴:2,
+            大廳:1,
+        }
     },
     price: 3000,
     depositMethod: "一個月",
-    rentIncludes: "管理費",
+    rentIncludes: ["管理費"],
     houseFace: "坐北朝南",
     title: "精美整層房屋",
     contact: {
@@ -49,16 +50,16 @@ const testData1 = {
     isRemoved: false
 }
 
-const testData2 = {
+const createData2 = {
     houseInfo: {
         houseSize: 22,
         houseType: "公寓大樓",
         roomType: "獨立套房",
-        room: [
-            {id: 1, RoomName: "房間", RoomNumber: 3},
-            {id: 2, RoomName: "衛浴", RoomNumber: 1},
-            {id: 3, RoomName: "大廳", RoomNumber: 1},
-        ]
+        room: {
+            房間:3,
+            衛浴:1,
+            大廳:1,
+        }
     },
     price: 12000,
     depositMethod: "面議",
@@ -89,6 +90,33 @@ const testData2 = {
     },
     isRemoved: false
 }
+const searchData = {
+    houseInfo: {
+        houseType: "公寓大樓",
+        roomType: "獨立套房",
+        room: {
+            房間:3,
+            衛浴:1,
+            大廳:1,
+        }
+    },
+    price: [0,20000],
+    rentIncludes: ["管理費", "網路", "瓦斯費"],
+    equipmentAndServices: {
+        condition: ['男女皆可', 'student', 'officeWorker', 'year'],
+        houseRule: ['可養寵', '可開火'],
+        equipment: ['床', '書桌', '冰箱', '冷氣', '熱水器', '電視'],
+        service: ['管理室', '回收室', '網路', '第四台', '電梯', '車位'],
+        publicUtilities: ['游泳池', '視聽室']
+    },
+    address: {
+        city: '台東縣',
+        township: '台東市',
+        others: '寧波街55巷32弄9號'
+    },
+    isRented: '否',
+    isRemoved: false
+}
 
 // Define tests
 describe("POST /house", function () {
@@ -98,7 +126,7 @@ describe("POST /house", function () {
     it("create a house", function (done) {
         request(app)
             .post("/house")
-            .send(testData1)
+            .send(createData2)
             .set("Accept", "application/json")
             .set("Authorization", `ATARI ${authToken}`)
             .expect(StatusCodes.CREATED)
@@ -108,3 +136,73 @@ describe("POST /house", function () {
             });
     });
 });
+
+// Define tests
+describe("GET /house/list", function () {
+
+    it("search house page", function (done) {
+        request(app)
+            .get("/house/list")
+            .query({page:1,...searchData})
+            .set("Accept", "application/json")
+            .expect(StatusCodes.CREATED)
+            .end((err, res) => {
+                console.log(res.body);
+                done(err);
+            });
+    });
+}); 
+
+const id= "";
+
+describe("GET /house", function () {
+
+    it("get house", function (done) {
+        request(app)
+            .get("/house")
+            .query({id})
+            .set("Accept", "application/json")
+            .expect(StatusCodes.OK)
+            .end((err, res) => {
+                console.log(res.body);
+                done(err);
+            });
+    });
+}); 
+
+
+// Define tests
+describe("PUT /house", function () {
+    // Read token from test.key
+    const authToken = readToken();
+
+    it("modify house", function (done) {
+        request(app)
+            .post("/house")
+            .send(createData2)
+            .set("Accept", "application/json")
+            .set("Authorization", `ATARI ${authToken}`)
+            .expect(StatusCodes.CREATED)
+            .end((err, res) => {
+                console.log(res.body);
+                done(err);
+            });
+    });
+});
+
+
+describe("DELETE /house", function () {
+
+    it("delete house", function (done) {
+        request(app)
+            .get("/house")
+            .query({id})
+            .set("Accept", "application/json")
+            .expect(StatusCodes.OK)
+            .end((err, res) => {
+                console.log(res.body);
+                done(err);
+            });
+    });
+}); 
+

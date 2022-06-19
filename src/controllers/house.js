@@ -32,9 +32,9 @@ module.exports = (ctx, r) => {
             // 取得未標示為被刪除的的文章列表
             const filter = {
                 "isRemoved": false,
-                "isRented": false,
+                "isRented": "否",
                 "address": {
-                    city: {"$in": req.query.address.city},
+                    city: req.query.address.city,
                     township: {"$in": req.query.address.township},
                 },
                 "houseInfo.houseType": req.query.houseInfo.houseType,
@@ -91,8 +91,8 @@ module.exports = (ctx, r) => {
             }
 
             const house = await House.find(filter)
-                .skip(page * 10)
-                .limit(10)
+                .skip(page * 12)
+                .limit(12)
                 .exec();
             // 回傳房屋列表
             res.send(house);
@@ -131,19 +131,18 @@ module.exports = (ctx, r) => {
     router.post(
         "/",
         middleware.access,
-        middleware.validator.body("id").isEmpty(),
         middleware.validator.body("houseInfo").isObject(),
-        middleware.validator.body("people").isNumeric(),
         middleware.validator.body("price").isNumeric(),
         middleware.validator.body("title").isString(),
-        middleware.validator.body("photo").isArray(),
+        middleware.validator.body("depositMethod").isString(),
+        middleware.validator.body("rentIncludes").isArray(),
+        middleware.validator.body("houseFace").isString(),
         middleware.validator.body("contact").isObject(),
-        middleware.validator.body("furniture").isArray(),
-        middleware.validator.body("publicUtilities").isArray(),
-        middleware.validator.body("address").isString(),
+        middleware.validator.body("houseDescription").isString(),
+        middleware.validator.body("equipmentAndServices").isObject(),
+        middleware.validator.body("address").isObject(),
         middleware.validator.body("isRented").isString(),
         middleware.validator.body("rentInfo").isObject(),
-        middleware.validator.body("isRemoved").isBoolean(),
         middleware.inspector,
         async (req, res) => {
             // 取得文章的 Model
@@ -157,7 +156,7 @@ module.exports = (ctx, r) => {
             // 儲存文章
             if (await house.save()) {
                 // 如果儲存成功，將回傳 CREATED
-                res.sendStatus(StatusCodes.CREATED);
+                res.status(StatusCodes.CREATED).send(house);
             } else {
                 // 如果儲存失敗，將回傳 INTERNAL_SERVER_ERROR
                 res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);

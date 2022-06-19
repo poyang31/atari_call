@@ -16,7 +16,6 @@ module.exports = new Schema({
     depositMethod: String, // 押金方式
     rentIncludes: Array, // 租金包含
     houseFace: String, // 房屋面向
-    photo: Array, // 照片
     title: String, // 房屋名稱
     contact: {
         lineID: String, // LineID
