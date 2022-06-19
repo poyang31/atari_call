@@ -130,7 +130,7 @@ module.exports = (ctx, r) => {
     // 建立房屋
     router.post(
         "/",
-        middleware.access(null),
+        middleware.access,
         middleware.validator.body("id").isEmpty(),
         middleware.validator.body("houseInfo").isObject(),
         middleware.validator.body("people").isNumeric(),
@@ -168,7 +168,7 @@ module.exports = (ctx, r) => {
     // 修改房屋
     router.put(
         "/",
-        middleware.access(null),
+        middleware.access,
         middleware.validator.body("id").isEmpty(),
         middleware.validator.body("houseInfo").isObject(),
         middleware.validator.body("people").isNumeric(),
@@ -219,7 +219,7 @@ module.exports = (ctx, r) => {
     // 刪除房屋
     router.delete(
         "/",
-        middleware.access(null),
+        middleware.access,
         middleware.validator.query("id").isString(),
         middleware.inspector,
         async (req, res) => {
