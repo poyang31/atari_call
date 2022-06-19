@@ -3,6 +3,9 @@
 // Load configs from .env
 require("dotenv").config();
 
+// Import fs
+const fs = require("fs");
+
 // Import modules
 const ctx = {
     testing: true,
@@ -12,6 +15,18 @@ const ctx = {
     jwt_secret: require("../src/init/jwt_secret"),
 };
 
+// Define saveToken
+const readToken = () => {
+    const keyPath = __dirname + "/../test.key";
+    return fs.readFileSync(keyPath);
+};
+
+// Define saveToken
+const saveToken = (authToken) => {
+    const keyPath = __dirname + "/../test.key";
+    fs.writeFileSync(keyPath, authToken);
+};
+
 // Initialize application
 const app = require("../src/init/express")(ctx);
 
@@ -19,4 +34,4 @@ const app = require("../src/init/express")(ctx);
 require("../src/controllers/index")(ctx, app);
 
 // Export (object)
-module.exports = {app, ctx};
+module.exports = {app, ctx, readToken, saveToken};

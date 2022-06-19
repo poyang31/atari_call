@@ -1,5 +1,6 @@
 # App config files
 secret.key
+test.key
 .env
 
 # Finder config file

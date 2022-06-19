@@ -7,15 +7,15 @@ const request = require("supertest");
 const {StatusCodes} = require("http-status-codes");
 
 // Initialize tests
-const {app, ctx} = require("./init");
+const {app, ctx, saveToken} = require("./init");
 
 // Define tests
-describe("POST /register", function() {
+describe("POST /register", function () {
     before((done) => {
         // Reset database before register
         ctx.database.connection.dropDatabase(() => done());
     });
-    it("register a user", function(done) {
+    it("register a user", function (done) {
         request(app)
             .post("/register")
             .send({
@@ -26,14 +26,15 @@ describe("POST /register", function() {
             .expect(StatusCodes.CREATED)
             .then((res) => {
                 console.log(res.body);
+                saveToken(res.body.authToken);
                 done();
             })
             .catch((err) => done(err));
     });
 });
 
-describe("POST /login", function() {
-    it("do a login", function(done) {
+describe("POST /login", function () {
+    it("do a login", function (done) {
         request(app)
             .post("/login")
             .send({
@@ -44,6 +45,7 @@ describe("POST /login", function() {
             .expect(StatusCodes.OK)
             .then((res) => {
                 console.log(res.body);
+                saveToken(res.body.authToken);
                 done();
             })
             .catch((err) => done(err));

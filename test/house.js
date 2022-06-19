@@ -4,20 +4,19 @@
 const request = require("supertest");
 
 // Import StatusCodes
-const { StatusCodes } = require("http-status-codes");
+const {StatusCodes} = require("http-status-codes");
 
 // Initialize tests
-const { app, ctx } = require("./init");
+const {app, readToken} = require("./init");
 
-
-const testdata1 = {
+const testData1 = {
     houseInfo: {
         houseSize: 10,
         houseType: "公寓大樓",
         roomType: "整層住家",
-        room: [{ id: 2, RoomName: "房間", RoomNumber: 2 },
-        { id: 3, RoomName: "衛浴", RoomNumber: 2 },
-        { id: 4, RoomName: "大廳", RoomNumber: 1 },
+        room: [{id: 2, RoomName: "房間", RoomNumber: 2},
+            {id: 3, RoomName: "衛浴", RoomNumber: 2},
+            {id: 4, RoomName: "大廳", RoomNumber: 1},
         ]
     },
     price: 3000,
@@ -34,7 +33,7 @@ const testdata1 = {
         condition: ['學生'],
         houseRule: null,
         equipment: ['床', '書桌', '冰箱', '冷氣', '熱水器',],
-        service: [, '網路', '第四台',],
+        service: ['網路', '第四台'],
         publicUtilities: ['游泳池']
     },
     address: {
@@ -50,15 +49,15 @@ const testdata1 = {
     isRemoved: false
 }
 
-const testdata2 = {
+const testData2 = {
     houseInfo: {
         houseSize: 22,
         houseType: "公寓大樓",
         roomType: "獨立套房",
         room: [
-            { id: 1, RoomName: "房間", RoomNumber: 3 },
-            { id: 2, RoomName: "衛浴", RoomNumber: 1 },
-            { id: 3, RoomName: "大廳", RoomNumber: 1 },
+            {id: 1, RoomName: "房間", RoomNumber: 3},
+            {id: 2, RoomName: "衛浴", RoomNumber: 1},
+            {id: 3, RoomName: "大廳", RoomNumber: 1},
         ]
     },
     price: 12000,
@@ -93,16 +92,19 @@ const testdata2 = {
 
 // Define tests
 describe("POST /house", function () {
-    it("creat a house", function (done) {
+    // Read token from test.key
+    const authToken = readToken();
+
+    it("create a house", function (done) {
         request(app)
             .post("/house")
-            .send(testdata1)
+            .send(testData1)
             .set("Accept", "application/json")
+            .set("Authorization", `ATARI ${authToken}`)
             .expect(StatusCodes.CREATED)
-            .then((res) => {
+            .end((err, res) => {
                 console.log(res.body);
-                done();
-            })
-            .catch((err) => done(err));
+                done(err);
+            });
     });
 });
