@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-module.exports = new Schema({
+const userSchema = new Schema({
     username: String, // 帳號
     password: String, // 密碼
     lastName: String, // 姓
@@ -14,3 +14,12 @@ module.exports = new Schema({
     favoriteArticleIds: Array, // 最愛的文章
     favoriteHouseIds: Array, // 最愛的房屋
 });
+
+userSchema.set('toJSON', {
+    transform: function (doc, ret, _) {
+        delete ret.password;
+        return ret;
+    }
+});
+
+module.exports = userSchema;

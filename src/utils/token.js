@@ -72,5 +72,7 @@ function isGone(ctx, tokenData) {
 }
 
 module.exports = {
+    issueAuthToken,
     validateAuthToken,
+    isGone
 };

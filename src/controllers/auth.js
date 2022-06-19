@@ -6,6 +6,7 @@ const schema = {
 };
 const util = {
     hash: require("js-sha256"),
+    token: require("../utils/token")
 };
 const middleware = {
     inspector: require("../middlewares/inspector"),
@@ -26,7 +27,7 @@ module.exports = (ctx, r) => {
             // 取得使用者的 Model
             const User = ctx.database.model("User", schema.user);
             // 透過 username 取得使用者
-            const user = User.findOne({username: req.body.username});
+            const user = await User.findOne({username: req.body.username}).exec();
             // 檢查使用者是否存在
             if (!user) {
                 // 如果沒有找到使用者，將回傳 NOT_FOUND，並且結束函式
@@ -39,8 +40,10 @@ module.exports = (ctx, r) => {
                 // 如果密碼錯誤，將回傳 UNAUTHORIZED，並且結束函式
                 return;
             }
-            // 回傳該帳戶
-            res.send(user);
+            // 生成 authToken
+            const authToken = util.token.issueAuthToken(ctx, user);
+            // 回傳資料
+            res.send({authToken});
         },
     );
 
@@ -66,8 +69,10 @@ module.exports = (ctx, r) => {
             user.favoriteHouseIds = [];
             // 儲存使用者
             if (await user.save()) {
-                // 如果儲存成功，將回傳 CREATED
-                res.sendStatus(StatusCodes.CREATED);
+                // 生成 authToken
+                const authToken = util.token.issueAuthToken(ctx, user);
+                // 回傳資料
+                res.status(StatusCodes.CREATED).send({authToken});
             } else {
                 // 如果儲存失敗，將回傳 INTERNAL_SERVER_ERROR
                 res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
