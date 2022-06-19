@@ -15,11 +15,11 @@ const userSchema = new Schema({
     favoriteHouseIds: Array, // 最愛的房屋
 });
 
-userSchema.set('toJSON', {
-    transform: function (doc, ret, _) {
+userSchema.set("toJSON", {
+    transform: function(doc, ret, _) {
         delete ret.password;
         return ret;
-    }
+    },
 });
 
 module.exports = userSchema;

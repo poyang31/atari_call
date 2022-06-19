@@ -6,7 +6,7 @@ const schema = {
 };
 const util = {
     hash: require("js-sha256"),
-    token: require("../utils/token")
+    token: require("../utils/token"),
 };
 const middleware = {
     inspector: require("../middlewares/inspector"),
@@ -27,7 +27,8 @@ module.exports = (ctx, r) => {
             // 取得使用者的 Model
             const User = ctx.database.model("User", schema.user);
             // 透過 username 取得使用者
-            const user = await User.findOne({username: req.body.username}).exec();
+            const filter = {username: req.body.username};
+            const user = await User.findOne(filter).exec();
             // 檢查使用者是否存在
             if (!user) {
                 // 如果沒有找到使用者，將回傳 NOT_FOUND，並且結束函式

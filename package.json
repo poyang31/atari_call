@@ -11,6 +11,7 @@
     "dev-database": "docker run --network=host --rm mongo",
     "dev": "nodemon app.js",
     "start": "node app.js",
+    "prepare": "husky install",
     "lint": "eslint \"app.js\" \"new_secret.js\" \"src/**/*.js\"",
     "lint:fix": "eslint \"app.js\" \"new_secret.js\" \"src/**/*.js\" --fix",
     "test": "mocha tests --exit --recursive --timeout 5000",
@@ -42,7 +43,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint:fix"
+      "pre-commit": "npm run lint:fix",
+      "pre-push": "npm run lint"
     }
   }
 }
