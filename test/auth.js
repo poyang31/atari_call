@@ -21,6 +21,10 @@ describe("POST /register", function () {
             .send({
                 username: "test",
                 password: "test_password",
+                lastName: "test_lastName",
+                firstName: "test_firstName",
+                lineId: "test_lineId",
+                phone: "test_phone"
             })
             .set("Accept", "application/json")
             .expect(StatusCodes.CREATED)
