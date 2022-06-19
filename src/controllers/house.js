@@ -6,6 +6,7 @@ const schema = {
     house: require("../schemas/house"),
 };
 const middleware = {
+    access: require("../middlewares/access"),
     inspector: require("../middlewares/inspector"),
     validator: require("express-validator"),
 };
@@ -127,6 +128,7 @@ module.exports = (ctx, r) => {
     // 建立房屋
     router.post(
         "/",
+        middleware.access(null),
         middleware.validator.body("id").isEmpty(),
         middleware.validator.body("houseInfo").isObject(),
         middleware.validator.body("people").isNumeric(),
@@ -147,7 +149,7 @@ module.exports = (ctx, r) => {
             // 建立新的文章
             const house = new House(req.body);
             // 強制設定 authorId 為 作者 id
-            house.authorId = req.authenticated.sub;
+            house.authorId = req.auth.id;
             // 強制設定 isRemoved 為 false
             house.isRemoved = false;
             // 儲存文章
@@ -164,6 +166,7 @@ module.exports = (ctx, r) => {
     // 修改房屋
     router.put(
         "/",
+        middleware.access(null),
         middleware.validator.body("id").isEmpty(),
         middleware.validator.body("houseInfo").isObject(),
         middleware.validator.body("people").isNumeric(),
@@ -214,6 +217,7 @@ module.exports = (ctx, r) => {
     // 刪除房屋
     router.delete(
         "/",
+        middleware.access(null),
         middleware.validator.query("id").isString(),
         middleware.inspector,
         async (req, res) => {

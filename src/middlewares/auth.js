@@ -9,12 +9,12 @@ const {StatusCodes} = require("http-status-codes");
 
 // Import authMethods
 const authMethods = {
-    "SARA": async (ctx, req, _) =>
-        require("../utils/token").validateAuthToken(ctx, req.auth_secret),
+    "ATARI": async (ctx, req, _) =>
+        require("../utils/token").validateAuthToken(ctx, req.auth.secret),
 };
 
 // Export (function)
-module.exports = (ctx) => function(req, res, next) {
+module.exports = (ctx) => function (req, res, next) {
     const authCode = req.header("Authorization");
     if (!authCode) {
         next();
@@ -25,16 +25,30 @@ module.exports = (ctx) => function(req, res, next) {
         next();
         return;
     }
-    req.auth_method = params[0];
-    req.auth_secret = params[1];
-    if (!(req.auth_method in authMethods)) {
+    req.auth = {
+        id: null,
+        metadata: null,
+        method: params[0],
+        secret: params[1],
+    };
+    if (!(req.auth.method in authMethods)) {
         next();
         return;
     }
-    authMethods[req.auth_method](ctx, req, res)
+    authMethods[req.auth.method](ctx, req, res)
         .then((result) => {
-            if (!req.authenticated) {
-                req.authenticated = result;
+            if (!req.auth.metadata) {
+                req.auth.metadata = result;
+            }
+            if (!req.auth.id) {
+                req.auth.id =
+                    result?.id ||
+                    result?.sub ||
+                    result?.user?.id ||
+                    result?.data?.id ||
+                    result?.user?._id ||
+                    result?.data?._id ||
+                    null;
             }
             next();
         })
