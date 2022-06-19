@@ -40,11 +40,5 @@
     "nodemon": "^2.0.13",
     "nyc": "^15.1.0",
     "supertest": "^6.2.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint:fix",
-      "pre-push": "npm run lint"
-    }
   }
 }
