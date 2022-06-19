@@ -54,12 +54,12 @@ module.exports = (ctx, r) => {
     r.post(
         "/register",
         middleware.validator.body("id").isEmpty(),
-        middleware.validator.body("username").isString(),
-        middleware.validator.body("password").isString(),
-        middleware.validator.body("lastName").isString(),
-        middleware.validator.body("firstName").isString(),
-        middleware.validator.body("lineId").isString(),
-        middleware.validator.body("phone").isString(),
+        middleware.validator.body("username").isString().notEmpty(),
+        middleware.validator.body("password").isString().notEmpty(),
+        middleware.validator.body("lastName").isString().notEmpty(),
+        middleware.validator.body("firstName").isString().notEmpty(),
+        middleware.validator.body("lineId").isString().notEmpty(),
+        middleware.validator.body("phone").isString().notEmpty(),
         middleware.validator.body("favoriteArticleIds").isEmpty(),
         middleware.validator.body("favoriteHouseIds").isEmpty(),
         middleware.inspector,
@@ -68,6 +68,10 @@ module.exports = (ctx, r) => {
             req.body.password = util.hash.sha256(req.body.password);
             // 取得使用者的 Model
             const User = ctx.database.model("User", schema.user);
+            if (await User.findOne({username: req.body.username}).exec()) {
+                res.sendStatus(StatusCodes.CONFLICT);
+                return;
+            }
             // 建立新的使用者
             const user = new User(req.body);
             // 強制設定 favoriteArticleIds 為 []
