@@ -1,6 +1,7 @@
+"use strict";
+
 const routes = [
     require("./auth"),
-    require("./article"),
     require("./house"),
 ];
 
