@@ -71,7 +71,7 @@ module.exports = (ctx, r) => {
                 },
 
             };
-            if (req.query.address.township) {
+            if (req.query.address.township.length) {
                 filter["address.township"] = {};
             }
             if (req.query.houseInfo.houseType) {
@@ -80,14 +80,14 @@ module.exports = (ctx, r) => {
             if (req.query.houseInfo.roomType) {
                 filter["houseInfo.roomType"] = {};
             }
-            if (req.query.equipmentAndServices.houseRule) {
+            if (req.query.equipmentAndServices.houseRule.length) {
                 filter["equipmentAndServices.houseRule"] = {};
             }
-            if (req.query.equipmentAndServices.equipment) {
+            if (req.query.equipmentAndServices.equipment.length) {
                 filter["equipmentAndServices.equipment"] = {};
             }
-            if (req.query.equipmentAndServices.condition.role) {
-                filter["equipmentAndServices.condition.role"] = {};
+            if (req.query.equipmentAndServices.condition.length) {
+                filter["equipmentAndServices.condition"] = {};
             }
 
             const house = await House.find(filter)
