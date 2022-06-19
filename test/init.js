@@ -18,7 +18,9 @@ const ctx = {
 // Define saveToken
 const readToken = () => {
     const keyPath = __dirname + "/../test.key";
-    return fs.readFileSync(keyPath);
+    return fs.existsSync(keyPath)
+        ? fs.readFileSync(keyPath)
+        : null;
 };
 
 // Define saveToken
