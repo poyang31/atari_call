@@ -46,7 +46,7 @@ module.exports = (ctx, r) => {
             // 生成 authToken
             const authToken = util.token.issueAuthToken(ctx, user);
             // 回傳資料
-            res.send({authToken});
+            res.send({user, authToken});
         },
     );
 
@@ -84,7 +84,7 @@ module.exports = (ctx, r) => {
                 // 生成 authToken
                 const authToken = util.token.issueAuthToken(ctx, user);
                 // 回傳資料
-                res.status(StatusCodes.CREATED).send({authToken});
+                res.status(StatusCodes.CREATED).send({user, authToken});
             } else {
                 // 如果儲存失敗，將回傳 INTERNAL_SERVER_ERROR
                 res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
