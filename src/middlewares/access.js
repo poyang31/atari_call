@@ -8,7 +8,7 @@ const {StatusCodes} = require("http-status-codes");
 // Export (function)
 module.exports = (req, res, next) => {
     // Check auth exists
-    if (!req.auth) {
+    if (!(req.auth && req.auth.id)) {
         res.sendStatus(StatusCodes.UNAUTHORIZED);
         return;
     }

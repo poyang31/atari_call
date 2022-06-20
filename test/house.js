@@ -15,9 +15,9 @@ const createData1 = {
         houseType: "公寓大樓",
         roomType: "整層住家",
         room: {
-            房間:2,
-            衛浴:2,
-            大廳:1,
+            房間: 2,
+            衛浴: 2,
+            大廳: 1,
         }
     },
     price: 3000,
@@ -56,9 +56,9 @@ const createData2 = {
         houseType: "公寓大樓",
         roomType: "獨立套房",
         room: {
-            房間:3,
-            衛浴:1,
-            大廳:1,
+            房間: 3,
+            衛浴: 1,
+            大廳: 1,
         }
     },
     price: 12000,
@@ -95,12 +95,12 @@ const searchData = {
         houseType: "公寓大樓",
         roomType: "獨立套房",
         room: {
-            房間:3,
-            衛浴:1,
-            大廳:1,
+            房間: 3,
+            衛浴: 1,
+            大廳: 1,
         }
     },
-    price: [0,20000],
+    price: [0, 20000],
     rentIncludes: ["管理費", "網路", "瓦斯費"],
     equipmentAndServices: {
         condition: ['男女皆可', 'student', 'officeWorker', 'year'],
@@ -119,7 +119,7 @@ describe("/house/list", function () {
     it("search house page", function (done) {
         request(app)
             .get("/house/list")
-            .query({page:1})
+            .query({page: 1})
             .set("Accept", "application/json")
             .expect(StatusCodes.OK)
             .end((err, res) => {

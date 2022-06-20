@@ -13,14 +13,15 @@ const {app, readToken} = require("./init");
 describe("/profile", function () {
     // Read token from test.key
     const authToken = readToken();
+    const userData = {
+        lastName: 'test_lastName',
+        firstName: 'test_firstName',
+        nickname: 'test_nickname',
+        lineId: 'test_lineId',
+        phone: 'test_phone',
+    };
 
-const userdata = {
-    lastName: 'test_lastName',
-    firstName: 'test_firstName',
-    nickname: 'test_nickname',
-    lineId: 'test_lineId',
-    phone: 'test_phone',
-  }
+    let userId;
 
     it("get profile", function (done) {
         request(app)
@@ -30,6 +31,7 @@ const userdata = {
             .expect(StatusCodes.OK)
             .then((res) => {
                 console.log(res.body);
+                userId = res.body._id;
                 done();
             })
             .catch((err) => done(err));
@@ -38,10 +40,10 @@ const userdata = {
     it("modify profile", function (done) {
         request(app)
             .put("/profile")
-            .send({id: "62b0284972befe5df6c48921",...userdata})
+            .send({id: userId, ...userData})
             .set("Accept", "application/json")
             .set("Authorization", `ATARI ${authToken}`)
-            .expect(StatusCodes.CREATED)
+            .expect(StatusCodes.NO_CONTENT)
             .then((res) => {
                 console.log(res.body);
                 done();
@@ -49,4 +51,3 @@ const userdata = {
             .catch((err) => done(err));
     });
 });
-
