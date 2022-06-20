@@ -23,7 +23,7 @@ describe("/register", function () {
                 password: "test_password",
                 lastName: "test_lastName",
                 firstName: "test_firstName",
-                nickName: "test_nickName",
+                nickname: "test_nickname",
                 lineId: "test_lineId",
                 phone: "test_phone"
             })
