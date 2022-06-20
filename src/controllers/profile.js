@@ -1,14 +1,15 @@
 "use strict";
 
 const {Router: expressRouter} = require("express");
-
-const schema = {
-    user: require("../schemas/user"),
-};
-
 const {StatusCodes} = require("http-status-codes");
 
 // Import modules
+const util = {
+    hash: require("js-sha256"),
+};
+const schema = {
+    user: require("../schemas/user"),
+};
 const middleware = {
     access: require("../middlewares/access"),
     inspector: require("../middlewares/inspector"),
@@ -61,6 +62,34 @@ module.exports = (ctx, r) => {
             }
         },
     );
+
+    router.patch(
+        "/",
+        middleware.access,
+        middleware.validator.body("password").isString().notEmpty(),
+        async (req, res) => {
+            // 取得使用者的 Model
+            const User = ctx.database.model("User", schema.user);
+            // 透過 id 取得使用者
+            const user = await User.findById(req.auth.id).exec();
+            // 檢查使用者是否存在
+            if (!user) {
+                // 如果沒有找到使用者，將回傳 NOT_FOUND，並且結束函式
+                res.sendStatus(StatusCodes.NOT_FOUND);
+                return;
+            }
+            // 將資料更新到使用者
+            user.password = util.hash.sha256(req.body.password);
+            // 儲存使用者
+            if (await user.save()) {
+                // 如果儲存成功，將回傳 NO_CONTENT
+                res.sendStatus(StatusCodes.NO_CONTENT);
+            } else {
+                // 如果儲存失敗，將回傳 INTERNAL_SERVER_ERROR
+                res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+            }
+        }
+    )
 
     r.use("/profile", router);
 };
