@@ -10,7 +10,7 @@ const {StatusCodes} = require("http-status-codes");
 const {app, ctx, saveToken} = require("./init");
 
 // Define tests
-describe("POST /register", function () {
+describe("/register", function () {
     before((done) => {
         // Reset database before register
         ctx.database.connection.dropDatabase(() => done());
@@ -23,7 +23,7 @@ describe("POST /register", function () {
                 password: "test_password",
                 lastName: "test_lastName",
                 firstName: "test_firstName",
-                nkckName: "test_nickName",
+                nickName: "test_nickName",
                 lineId: "test_lineId",
                 phone: "test_phone"
             })
@@ -38,7 +38,7 @@ describe("POST /register", function () {
     });
 });
 
-describe("POST /login", function () {
+describe("/login", function () {
     it("do a login", function (done) {
         request(app)
             .post("/login")

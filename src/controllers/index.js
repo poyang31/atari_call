@@ -2,6 +2,7 @@
 
 const routes = [
     require("./auth"),
+    require("./profile"),
     require("./house"),
 ];
 

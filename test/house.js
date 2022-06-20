@@ -118,28 +118,7 @@ const searchData = {
     isRemoved: false
 }
 
-// Define tests
-describe("POST /house", function () {
-    // Read token from test.key
-    const authToken = readToken();
-
-    it("create a house", function (done) {
-        request(app)
-            .post("/house")
-            .send(createData2)
-            .set("Accept", "application/json")
-            .set("Authorization", `ATARI ${authToken}`)
-            .expect(StatusCodes.CREATED)
-            .end((err, res) => {
-                console.log(res.body);
-                done(err);
-            });
-    });
-});
-
-// Define tests
-describe("GET /house/list", function () {
-
+describe("/house/list", function () {
     it("search house page", function (done) {
         request(app)
             .get("/house/list")
@@ -151,12 +130,28 @@ describe("GET /house/list", function () {
                 done(err);
             });
     });
-}); 
+});
 
-const id= "";
+// Define tests
+describe("/house", function () {
+    // Read token from test.key
+    const authToken = readToken();
 
-describe("GET /house", function () {
+    let id;
 
+    it("create a house", function (done) {
+        request(app)
+            .post("/house")
+            .send(createData2)
+            .set("Accept", "application/json")
+            .set("Authorization", `ATARI ${authToken}`)
+            .expect(StatusCodes.CREATED)
+            .end((err, res) => {
+                console.log(res.body);
+                id = res.body._id;
+                done(err);
+            });
+    });
     it("get house", function (done) {
         request(app)
             .get("/house")
@@ -168,14 +163,6 @@ describe("GET /house", function () {
                 done(err);
             });
     });
-}); 
-
-
-// Define tests
-describe("PUT /house", function () {
-    // Read token from test.key
-    const authToken = readToken();
-
     it("modify house", function (done) {
         request(app)
             .post("/house")
@@ -188,11 +175,6 @@ describe("PUT /house", function () {
                 done(err);
             });
     });
-});
-
-
-describe("DELETE /house", function () {
-
     it("delete house", function (done) {
         request(app)
             .get("/house")
@@ -204,5 +186,5 @@ describe("DELETE /house", function () {
                 done(err);
             });
     });
-}); 
+});
 
