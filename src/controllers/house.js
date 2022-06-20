@@ -30,64 +30,7 @@ module.exports = (ctx, r) => {
             // 運算 page 的起始索引
             const page = pageInt > 0 ? pageInt - 1 : 0;
             // 取得未標示為被刪除的的文章列表
-            const filter = {
-                "isRemoved": false,
-                "isRented": "否",
-                "address": {
-                    city: req.query.address.city,
-                    township: {"$in": req.query.address.township},
-                },
-                "houseInfo.houseType": req.query.houseInfo.houseType,
-                "houseInfo.roomType": req.query.houseInfo.roomType,
-                "price": {
-                    "$lte": req.query.price[1],
-                    "$gte": req.query.price[0],
-                },
-                "houseInfo.room.房間": {"$gte": req.query.houseInfo.room.房間},
-                "houseInfo.room.衛浴": {"$gte": req.query.houseInfo.room.衛浴},
-                "houseInfo.room.大廳": {"$gte": req.query.houseInfo.room.大廳},
-                "equipmentAndServices.condition": {
-                    role: {
-                        "$all": req
-                            .query
-                            .equipmentAndServices
-                            .condition
-                            .role,
-                    },
-                    gender: req
-                        .query
-                        .equipmentAndServices
-                        .condition
-                        .gender,
-                },
-                "equipmentAndServices.houseRule": {
-                    "$all": req.query.equipmentAndServices.house,
-                },
-                "equipmentAndServices.equipment": {
-                    "$all": req.query.equipmentAndServices.equipment,
-                },
-            };
-
-            if (req.query.address.township.length) {
-                filter["address.township"] = {};
-            }
-            if (req.query.houseInfo.houseType) {
-                filter["houseInfo.houseType"] = {};
-            }
-            if (req.query.houseInfo.roomType) {
-                filter["houseInfo.roomType"] = {};
-            }
-            if (req.query.equipmentAndServices.houseRule.length) {
-                filter["equipmentAndServices.houseRule"] = {};
-            }
-            if (req.query.equipmentAndServices.equipment.length) {
-                filter["equipmentAndServices.equipment"] = {};
-            }
-            if (req.query.equipmentAndServices.condition.length) {
-                filter["equipmentAndServices.condition"] = {};
-            }
-
-            const house = await House.find(filter)
+            const house = await House.find({})
                 .skip(page * 12)
                 .limit(12)
                 .exec();
