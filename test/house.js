@@ -119,9 +119,9 @@ describe("/house/list", function () {
     it("search house page", function (done) {
         request(app)
             .get("/house/list")
-            .query({page:1,...searchData})
+            .query({page:1})
             .set("Accept", "application/json")
-            .expect(StatusCodes.CREATED)
+            .expect(StatusCodes.OK)
             .end((err, res) => {
                 console.log(res.body);
                 done(err);
