@@ -53,7 +53,7 @@ module.exports = (ctx, r) => {
             user.phone = req.body.phone;
             // 儲存使用者
             if (await user.save()) {
-                // 如果儲存成功，將回傳 OK
+                // 如果儲存成功，將回傳 NO_CONTENT
                 res.sendStatus(StatusCodes.NO_CONTENT);
             } else {
                 // 如果儲存失敗，將回傳 INTERNAL_SERVER_ERROR
