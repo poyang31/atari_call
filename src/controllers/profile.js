@@ -88,8 +88,8 @@ module.exports = (ctx, r) => {
                 // 如果儲存失敗，將回傳 INTERNAL_SERVER_ERROR
                 res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
             }
-        }
-    )
+        },
+    );
 
     r.use("/profile", router);
 };
