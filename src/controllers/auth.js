@@ -20,8 +20,8 @@ module.exports = (ctx, r) => {
     // 登入
     r.post(
         "/login",
-        middleware.validator.body("username").isString(),
-        middleware.validator.body("password").isString(),
+        middleware.validator.body("username").isString().notEmpty(),
+        middleware.validator.body("password").isString().notEmpty(),
         middleware.inspector,
         async (req, res) => {
             // 將密碼進行 SHA-256 雜湊
