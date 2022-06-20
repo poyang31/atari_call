@@ -1,32 +1,59 @@
 "use strict";
+// Validate "Authorization" header, but it will not interrupt the request.
 
-const {validateAuthToken} = require("../utils/token");
-const {getUserPreferences} = require("../utils/user_preferences");
+// To interrupt the request which without the request,
+// please use "access.js" middleware.
 
-module.exports = (ctx) => {
-    return function (req, res, next) {
-        const auth_code = req.header("Authorization");
-        if (!auth_code) {
-            next();
-            return;
-        }
-        const params = auth_code.split(" ");
-        if (params.length !== 2) {
-            next();
-            return;
-        }
-        req.auth_method = params[0];
-        switch (params[0]) {
-            case "SARA": {
-                req.authenticated = validateAuthToken(ctx, params[1]);
-                if (req.authenticated) {
-                     getUserPreferences(ctx, req.authenticated.sub)
-                         .then((preferences) => req.authenticated.preferences = preferences)
-                         .catch((e) => console.error(e));
-                }
-                break;
-            }
-        }
+// Import StatusCodes
+const {StatusCodes} = require("http-status-codes");
+
+// Import authMethods
+const authMethods = {
+    "ATARI": async (ctx, req, _) =>
+        require("../utils/token").validateAuthToken(ctx, req.auth.secret),
+};
+
+// Export (function)
+module.exports = (ctx) => function(req, res, next) {
+    const authCode = req.header("Authorization");
+    if (!authCode) {
         next();
+        return;
+    }
+    const params = authCode.split(" ");
+    if (params.length !== 2) {
+        next();
+        return;
+    }
+    req.auth = {
+        id: null,
+        metadata: null,
+        method: params[0],
+        secret: params[1],
     };
-}
+    if (!(req.auth.method in authMethods)) {
+        next();
+        return;
+    }
+    authMethods[req.auth.method](ctx, req, res)
+        .then((result) => {
+            if (!req.auth.metadata) {
+                req.auth.metadata = result;
+            }
+            if (!req.auth.id) {
+                req.auth.id =
+                    result?.id ||
+                    result?.sub ||
+                    result?.user?.id ||
+                    result?.data?.id ||
+                    result?.user?._id ||
+                    result?.data?._id ||
+                    null;
+            }
+            next();
+        })
+        .catch((error) => {
+            res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+            console.error(error);
+        });
+};

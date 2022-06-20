@@ -1,15 +1,15 @@
 "use strict";
+// Check the role for the request required,
+// and interrupt if the requirement is not satisfied.
 
-const { StatusCodes } = require('http-status-codes');
+// Import StatusCodes
+const {StatusCodes} = require("http-status-codes");
 
-module.exports = (role) => (req, res, next) => {
-    const user_roles = req?.authenticated?.user?.roles;
-    if (!(user_roles && Array.isArray(user_roles))) {
+// Export (function)
+module.exports = (req, res, next) => {
+    // Check auth exists
+    if (!req.auth) {
         res.sendStatus(StatusCodes.UNAUTHORIZED);
-        return;
-    }
-    if (role && !user_roles.includes(role)) {
-        res.sendStatus(StatusCodes.FORBIDDEN);
         return;
     }
     next();
