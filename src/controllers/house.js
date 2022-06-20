@@ -45,32 +45,29 @@ module.exports = (ctx, r) => {
                 },
                 "houseInfo.room.房間": {"$gte": req.query.houseInfo.room.房間},
                 "houseInfo.room.衛浴": {"$gte": req.query.houseInfo.room.衛浴},
-                "houseInfo.room.廳數": {"$gte": req.query.houseInfo.room.廳數},
-                "equipmentAndServices": {
-                    condition: {
-                        role: {
-                            "$all": req
-                                .query
-                                .equipmentAndServices
-                                .condition
-                                .role,
-                        },
-                        gender: req
+                "houseInfo.room.大廳": {"$gte": req.query.houseInfo.room.大廳},
+                "equipmentAndServices.condition": {
+                    role: {
+                        "$all": req
                             .query
                             .equipmentAndServices
                             .condition
-                            .gender
-                        ,
+                            .role,
                     },
-                    houseRule: {
-                        "$all": req.query.equipmentAndServices.house,
-                    },
-                    equipment: {
-                        "$all": req.query.equipmentAndServices.equipment,
-                    },
+                    gender: req
+                        .query
+                        .equipmentAndServices
+                        .condition
+                        .gender,
                 },
-
+                "equipmentAndServices.houseRule": {
+                    "$all": req.query.equipmentAndServices.house,
+                },
+                "equipmentAndServices.equipment": {
+                    "$all": req.query.equipmentAndServices.equipment,
+                },
             };
+
             if (req.query.address.township.length) {
                 filter["address.township"] = {};
             }

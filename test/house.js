@@ -112,10 +112,7 @@ const searchData = {
     address: {
         city: '台東縣',
         township: '台東市',
-        others: '寧波街55巷32弄9號'
     },
-    isRented: '否',
-    isRemoved: false
 }
 
 describe("/house/list", function () {
