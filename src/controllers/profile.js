@@ -28,7 +28,6 @@ module.exports = (ctx, r) => {
     router.put(
         "/",
         middleware.access,
-        middleware.validator.body("password").isEmpty(),
         middleware.validator.body("lastName").isString().notEmpty(),
         middleware.validator.body("firstName").isString().notEmpty(),
         middleware.validator.body("nickname").isString().notEmpty(),
@@ -39,14 +38,7 @@ module.exports = (ctx, r) => {
             // 取得使用者的 Model
             const User = ctx.database.model("User", schema.user);
             // 透過 id 取得使用者
-            let user;
-            try {
-                user = await User.findById(req.body.id).exec();
-            } catch (e) {
-                if (e.kind !== "ObjectId") console.error(e);
-                res.sendStatus(StatusCodes.BAD_REQUEST);
-                return;
-            }
+            const user = await User.findById(req.auth.id).exec();
             // 檢查使用者是否存在
             if (!user) {
                 // 如果沒有找到使用者，將回傳 NOT_FOUND，並且結束函式
@@ -54,7 +46,11 @@ module.exports = (ctx, r) => {
                 return;
             }
             // 將資料更新到使用者
-            user = {...user, ...req.body};
+            user.lastName = req.body.lastName;
+            user.firstName = req.body.firstName;
+            user.nickname = req.body.nickname;
+            user.lineId = req.body.lineId;
+            user.phone = req.body.phone;
             // 儲存使用者
             if (await user.save()) {
                 // 如果儲存成功，將回傳 OK
