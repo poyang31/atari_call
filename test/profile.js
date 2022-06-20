@@ -26,4 +26,18 @@ describe("/profile", function () {
             })
             .catch((err) => done(err));
     });
+
+    it("modifyProfile", function (done) {
+        request(app)
+            .get("/profile")
+            .set("Accept", "application/json")
+            .set("Authorization", `ATARI ${authToken}`)
+            .expect(StatusCodes.OK)
+            .then((res) => {
+                console.log(res.body);
+                done();
+            })
+            .catch((err) => done(err));
+    });
 });
+

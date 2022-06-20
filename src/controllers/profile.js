@@ -28,7 +28,7 @@ module.exports = (ctx, r) => {
     router.put(
         "/",
         middleware.access,
-        middleware.validator.body("password").isString().notEmpty(),
+        middleware.validator.body("password").isEmpty(),
         middleware.validator.body("lastName").isString().notEmpty(),
         middleware.validator.body("firstName").isString().notEmpty(),
         middleware.validator.body("nickname").isString().notEmpty(),
