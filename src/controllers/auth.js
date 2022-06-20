@@ -58,6 +58,7 @@ module.exports = (ctx, r) => {
         middleware.validator.body("password").isString().notEmpty(),
         middleware.validator.body("lastName").isString().notEmpty(),
         middleware.validator.body("firstName").isString().notEmpty(),
+        middleware.validator.body("nickName").isString(),
         middleware.validator.body("lineId").isString().notEmpty(),
         middleware.validator.body("phone").isString().notEmpty(),
         middleware.validator.body("favoriteArticleIds").isEmpty(),

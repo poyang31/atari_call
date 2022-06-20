@@ -11,6 +11,7 @@ const userSchema = new Schema({
     firstName: String, // 名
     lineId: String, // lineId
     phone: String, // 電話
+    nickName: String, // 暱稱
     favoriteArticleIds: Array, // 最愛的文章
     favoriteHouseIds: Array, // 最愛的房屋
 });

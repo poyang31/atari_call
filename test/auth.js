@@ -23,6 +23,7 @@ describe("POST /register", function () {
                 password: "test_password",
                 lastName: "test_lastName",
                 firstName: "test_firstName",
+                nkckName: "test_nickName",
                 lineId: "test_lineId",
                 phone: "test_phone"
             })
